@@ -13,7 +13,7 @@ import {
 } from 'sequelize-typescript'
 
 @Table({
-  tableName: 'Users',
+  tableName: 'user',
   timestamps: true,
   paranoid: true, // Enables soft deletes, which will use the deletedAt column
 })
