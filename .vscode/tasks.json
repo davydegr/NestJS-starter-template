@@ -1,0 +1,11 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "yarn migrate",
+      "command": "yarn",
+      "args": ["migrate"],
+      "type": "shell"
+    }
+  ]
+}
