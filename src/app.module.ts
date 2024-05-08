@@ -1,17 +1,17 @@
-import { Module, OnModuleInit } from '@nestjs/common'
+import { Logger, Module, OnModuleInit } from '@nestjs/common'
 import { AppController } from './app.controller'
 import { AppService } from './app.service'
 import { SequelizeModule } from '@nestjs/sequelize'
 import { UsersModule } from './users/users.module'
 import { User } from './users/models/user.model'
-import * as dotenv from 'dotenv'
 import { Sequelize } from 'sequelize-typescript'
 import { ConfigModule } from '@nestjs/config'
 
-dotenv.config()
-
 @Module({
   imports: [
+    ConfigModule.forRoot({
+      isGlobal: true,
+    }),
     SequelizeModule.forRoot({
       dialect: 'mysql',
       host: process.env.DB_HOST,
@@ -21,23 +21,22 @@ dotenv.config()
       database: process.env.DB_NAME,
       models: [User],
     }),
-    ConfigModule.forRoot({
-      isGlobal: true,
-    }),
     UsersModule,
   ],
   controllers: [AppController],
   providers: [AppService],
 })
 export class AppModule implements OnModuleInit {
+  private readonly logger = new Logger(AppModule.name)
+
   constructor(private sequelize: Sequelize) {}
 
   async onModuleInit() {
     try {
       await this.sequelize.authenticate()
-      console.log('Connection has been established successfully.')
+      this.logger.log('Database connection has been established successfully.')
     } catch (error) {
-      console.error('Unable to connect to the database:', error)
+      this.logger.fatal('Unable to connect to the database:', error)
     }
   }
 }
