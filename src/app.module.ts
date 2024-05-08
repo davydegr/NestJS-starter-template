@@ -6,6 +6,7 @@ import { UsersModule } from './users/users.module'
 import { User } from './users/models/user.model'
 import * as dotenv from 'dotenv'
 import { Sequelize } from 'sequelize-typescript'
+import { ConfigModule } from '@nestjs/config'
 
 dotenv.config()
 
@@ -19,6 +20,9 @@ dotenv.config()
       password: process.env.DB_PASSWORD,
       database: process.env.DB_NAME,
       models: [User],
+    }),
+    ConfigModule.forRoot({
+      isGlobal: true,
     }),
     UsersModule,
   ],
