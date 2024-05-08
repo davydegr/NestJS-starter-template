@@ -1,17 +1,18 @@
 import { Logger, Module, OnModuleInit } from '@nestjs/common'
+import { ConfigModule } from '@nestjs/config'
+import { SequelizeModule } from '@nestjs/sequelize'
+import { Sequelize } from 'sequelize-typescript'
 import { AppController } from './app.controller'
 import { AppService } from './app.service'
-import { SequelizeModule } from '@nestjs/sequelize'
-import { UsersModule } from './users/users.module'
-import { User } from './users/models/user.model'
-import { Sequelize } from 'sequelize-typescript'
-import { ConfigModule } from '@nestjs/config'
 import { AuthModule } from './auth/auth.module'
+import { User } from './users/models/user.model'
+import { UsersModule } from './users/users.module'
 
 @Module({
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
+      envFilePath: '.env',
     }),
     SequelizeModule.forRoot({
       dialect: 'mysql',
