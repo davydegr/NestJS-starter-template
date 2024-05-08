@@ -1,15 +1,15 @@
 import {
-  Table,
   Column,
-  Model,
-  DataType,
-  PrimaryKey,
-  Default,
   CreatedAt,
-  UpdatedAt,
+  DataType,
+  Default,
   DeletedAt,
   IsEmail,
+  Model,
+  PrimaryKey,
+  Table,
   Unique,
+  UpdatedAt,
 } from 'sequelize-typescript'
 
 @Table({

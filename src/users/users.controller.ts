@@ -1,5 +1,6 @@
-import { Controller, Get, Logger } from '@nestjs/common'
+import { Body, Controller, Get, Logger, Post } from '@nestjs/common'
 import { UsersService } from './users.service'
+import { CreateUserDto } from 'src/auth/dto/create-user.dto'
 
 @Controller('users')
 export class UsersController {
@@ -11,5 +12,10 @@ export class UsersController {
   async findALl() {
     this.logger.log('Finding all users')
     return this.usersService.findAll()
+  }
+
+  @Post()
+  async create(@Body() dto: CreateUserDto) {
+    return this.usersService.create(dto)
   }
 }

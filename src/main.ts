@@ -13,6 +13,9 @@ async function bootstrap() {
   const validationPipe = new ValidationPipe({
     enableDebugMessages: isDev,
     disableErrorMessages: !isDev,
+    whitelist: true,
+    transform: true,
+    forbidNonWhitelisted: true,
   })
   app.useGlobalPipes(validationPipe)
 
