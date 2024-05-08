@@ -2,32 +2,36 @@
 
 module.exports = {
   up: async (queryInterface, Sequelize) => {
-    await queryInterface.createTable('user', {
+    await queryInterface.createTable('trip', {
       id: {
         allowNull: false,
         primaryKey: true,
         type: Sequelize.UUID,
         defaultValue: Sequelize.UUIDV4,
       },
-      username: {
-        type: Sequelize.STRING,
+      userId: {
+        type: Sequelize.UUID,
         allowNull: false,
-        unique: true,
+        references: {
+          model: 'users',
+          key: 'id',
+        },
       },
-      email: {
-        type: Sequelize.STRING,
-        allowNull: false,
-        unique: true,
-      },
-      passwordHash: {
+      name: {
         type: Sequelize.STRING,
         allowNull: false,
       },
-      firstName: {
-        type: Sequelize.STRING,
+      startDate: {
+        type: Sequelize.DATEONLY,
+        allowNull: true,
       },
-      lastName: {
+      endDate: {
+        type: Sequelize.DATEONLY,
+        allowNull: true,
+      },
+      destination: {
         type: Sequelize.STRING,
+        allowNull: true,
       },
       createdAt: {
         allowNull: false,
@@ -44,6 +48,6 @@ module.exports = {
     })
   },
   down: async (queryInterface) => {
-    await queryInterface.dropTable('Users')
+    await queryInterface.dropTable('trip')
   },
 }

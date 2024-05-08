@@ -2,32 +2,37 @@
 
 module.exports = {
   up: async (queryInterface, Sequelize) => {
-    await queryInterface.createTable('user', {
+    await queryInterface.createTable('packingListItem', {
       id: {
         allowNull: false,
         primaryKey: true,
         type: Sequelize.UUID,
         defaultValue: Sequelize.UUIDV4,
       },
-      username: {
-        type: Sequelize.STRING,
+      name: {
         allowNull: false,
-        unique: true,
-      },
-      email: {
         type: Sequelize.STRING,
+      },
+      packingListId: {
+        type: Sequelize.UUID,
         allowNull: false,
-        unique: true,
+        references: {
+          model: 'packingList',
+          key: 'id',
+        },
       },
-      passwordHash: {
-        type: Sequelize.STRING,
+      itemId: {
+        type: Sequelize.UUID,
+        allowNull: true,
+        references: {
+          model: 'item',
+          key: 'id',
+        },
+      },
+      isChecked: {
+        type: Sequelize.BOOLEAN,
         allowNull: false,
-      },
-      firstName: {
-        type: Sequelize.STRING,
-      },
-      lastName: {
-        type: Sequelize.STRING,
+        default: false,
       },
       createdAt: {
         allowNull: false,
@@ -44,6 +49,6 @@ module.exports = {
     })
   },
   down: async (queryInterface) => {
-    await queryInterface.dropTable('Users')
+    await queryInterface.dropTable('packingListItem')
   },
 }
