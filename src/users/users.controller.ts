@@ -1,6 +1,7 @@
-import { Body, Controller, Get, Logger, Post } from '@nestjs/common'
-import { UsersService } from './users.service'
+import { Body, Controller, Get, Logger, Post, UseGuards } from '@nestjs/common'
 import { CreateUserDto } from 'src/auth/dto/create-user.dto'
+import { AuthGuard } from '../guards/auth.guard'
+import { UsersService } from './users.service'
 
 @Controller('users')
 export class UsersController {
@@ -8,6 +9,7 @@ export class UsersController {
 
   constructor(private readonly usersService: UsersService) {}
 
+  @UseGuards(AuthGuard)
   @Get()
   async findALl() {
     this.logger.log('Finding all users')
