@@ -1,6 +1,9 @@
-import { NestFactory } from '@nestjs/core'
-import { AppModule } from './app.module'
 import { ValidationPipe } from '@nestjs/common'
+import { NestFactory } from '@nestjs/core'
+
+import { AppModule } from './app.module'
+
+import cookieParser from 'cookie-parser'
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule)
@@ -17,7 +20,9 @@ async function bootstrap() {
     transform: true,
     forbidNonWhitelisted: true,
   })
+
   app.useGlobalPipes(validationPipe)
+  app.use(cookieParser())
 
   // Start the application
   await app.listen(3001)
