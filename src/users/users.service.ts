@@ -3,6 +3,8 @@ import { InjectModel } from '@nestjs/sequelize'
 import * as bcrypt from 'bcrypt'
 import { FindOptions } from 'sequelize'
 import { CreateUserDto } from 'src/auth/dto/create-user.dto'
+import { toUserDto, toUserDtos } from '../auth/mapper'
+import { UserDto } from './dto/user.dto'
 import { User } from './models/user.model'
 
 @Injectable()
@@ -12,15 +14,21 @@ export class UsersService {
     private userModel: typeof User,
   ) {}
 
-  async findAll() {
-    return this.userModel.findAll()
+  async findAll(): Promise<UserDto[]> {
+    const users: User[] = await this.userModel.findAll()
+    return toUserDtos(users)
   }
 
-  async findOne(where: FindOptions<User>) {
+  async findOne(where: FindOptions<User>): Promise<UserDto> {
+    const user: User = await this.userModel.findOne(where)
+    return toUserDto(user)
+  }
+
+  async findForAuth(where: FindOptions<User>): Promise<User> {
     return this.userModel.findOne(where)
   }
 
-  async create(dto: CreateUserDto) {
+  async create(dto: CreateUserDto): Promise<UserDto> {
     const {
       username,
       email,
@@ -31,13 +39,15 @@ export class UsersService {
 
     const passwordHash = await this.hashPassword(plainPassword)
 
-    return this.userModel.create({
+    const newUser = await this.userModel.create({
       username,
       email,
       firstName,
       lastName,
       passwordHash,
     })
+
+    return toUserDto(newUser)
   }
 
   private async hashPassword(password: string) {

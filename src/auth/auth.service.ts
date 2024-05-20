@@ -3,8 +3,9 @@ import { JwtService } from '@nestjs/jwt'
 import bcrypt from 'bcrypt'
 import { Response } from 'express'
 import { UsersService } from 'src/users/users.service'
-import { LoginDto } from './dto/login.dto'
 import { COOKIE_VALIDITY } from '../constants'
+import { LoginDto } from './dto/login.dto'
+import { toUserDto } from './mapper'
 @Injectable()
 export class AuthService {
   constructor(
@@ -13,9 +14,21 @@ export class AuthService {
   ) {}
 
   async logIn(dto: LoginDto, response: Response): Promise<void> {
-    const { username, password } = dto
+    const { username, email, password } = dto
 
-    const user = await this.usersService.findOne({ where: { username } })
+    const whereOptions: any = {}
+
+    if (username) {
+      whereOptions.username = username
+    }
+
+    if (email) {
+      whereOptions.email = email
+    }
+
+    const user = await this.usersService.findForAuth({
+      where: whereOptions,
+    })
 
     if (!user) {
       throw new UnauthorizedException()
@@ -37,7 +50,12 @@ export class AuthService {
       maxAge: COOKIE_VALIDITY,
     })
 
-    response.send({ success: true })
+    const userDto = toUserDto(user)
+
+    response.send({
+      user: userDto,
+      success: true,
+    })
   }
 
   logOut(response: Response): void {
