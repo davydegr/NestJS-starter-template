@@ -24,6 +24,11 @@ export class UsersService {
     return toUserDto(user)
   }
 
+  /**
+   * Finds the user for authentication, returning it without transforming it to a DTO that strips the passwordHash.
+   * @param where
+   * @returns
+   */
   async findForAuth(where: FindOptions<User>): Promise<User> {
     return this.userModel.findOne(where)
   }

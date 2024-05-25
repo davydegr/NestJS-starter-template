@@ -2,7 +2,7 @@ import { Injectable, UnauthorizedException } from '@nestjs/common'
 import { JwtService } from '@nestjs/jwt'
 import bcrypt from 'bcrypt'
 import { Response } from 'express'
-import { FindOptions } from 'sequelize'
+import { FindOptions, Op } from 'sequelize'
 import { UsersService } from 'src/users/users.service'
 import { COOKIE_VALIDITY } from '../constants'
 import { User } from '../users/models/user.model'
@@ -54,17 +54,11 @@ export class AuthService {
   }
 
   buildWhereOptions(dto: LoginDto): FindOptions<User> {
-    const { username, email } = dto
+    const { login } = dto
 
-    const whereOptions: any = {}
+    const whereOptions: any = []
 
-    if (username) {
-      whereOptions.username = username
-    }
-
-    if (email) {
-      whereOptions.email = email
-    }
+    whereOptions.push({ [Op.or]: [{ username: login }, { email: login }] })
 
     return { where: whereOptions }
   }
