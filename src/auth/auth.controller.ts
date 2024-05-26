@@ -1,7 +1,16 @@
-import { Body, Controller, Post, Res } from '@nestjs/common'
+import {
+  Body,
+  Controller,
+  Get,
+  Post,
+  Req,
+  Res,
+  UseGuards,
+} from '@nestjs/common'
 import { Response } from 'express'
 import { AuthService } from './auth.service'
 import { LoginDto } from './dto/login.dto'
+import { JwtAuthGuard } from './jwt-auth.guard'
 
 @Controller('auth')
 export class AuthController {
@@ -15,5 +24,11 @@ export class AuthController {
   @Post('logout')
   logout(@Res() response: Response) {
     return this.authService.logOut(response)
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Get('me')
+  getMe(@Req() req) {
+    return req.user // The validated user is added to the request object by the JwtStrategy
   }
 }
